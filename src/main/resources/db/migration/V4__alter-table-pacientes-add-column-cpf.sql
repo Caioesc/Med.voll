@@ -1,0 +1,1 @@
+alter table pacientes add cpf char(11) not null unique;
