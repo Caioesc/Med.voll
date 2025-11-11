@@ -24,7 +24,7 @@ public class MedicoController {
 
     @GetMapping //Não precisa do @Transactional, pois é uma operação de leitura, não irá alterar registros no banco
     public Page<DadosListagemMedico> listar(@PageableDefault(size = 10, sort ={"nome"}) Pageable paginacao){ //Page informa, além da lista, os dados da paginação, mas para listar tudo, usar List
-        return repository.findAll(paginacao).map(DadosListagemMedico::new); //Usando page não se faz necessário mais o stream() e o toList()
+        return repository.findAllByAtivoTrue(paginacao).map(DadosListagemMedico::new); //Usando page não se faz necessário mais o stream() e o toList()
     }
 
     @PutMapping
@@ -33,6 +33,14 @@ public class MedicoController {
         var medico = repository.getReferenceById(dados.id());
         medico.atualizarInformacoes(dados);
         //O update no banco é feito automáticamente pela JPA, já que foi criada a variavel médico recebendo uma função do repository e a variável foi alterada.
+    }
+
+    @DeleteMapping("/{id}")
+    @Transactional
+    public void excluir(@PathVariable Long id){ //@PathVariable "avisa" ao Spring que o parâmetro passado se refere ao path, a url, do @DeleteMapping
+        //repository.deleteById(id); ---> Essa linha faz a exclusão física do dado no banco, mas para essa aplicação, quero apenas fazer uma exclusão lógica, deixar o médico como inativo.
+        var medico = repository.getReferenceById(id);
+        medico.excluir();
     }
 
 }
