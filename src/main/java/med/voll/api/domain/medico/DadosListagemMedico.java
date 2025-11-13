@@ -1,4 +1,4 @@
-package med.voll.api.medico;
+package med.voll.api.domain.medico;
 
 
 //DTO criado para devolver apenas os dados necessários para listagem
